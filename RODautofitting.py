@@ -77,46 +77,44 @@ def calcfitlist(run,n):
 
 
 
-def createmacroASA(mname,files,startvals,donefile):
+def createmacroASA(files,startvals,donefile):
     f=open(fr"{files['fitmac']}",'w')
     f.write(fr"re bul {files['bul']}"+'\n')
     f.write(fr"re dat  {files['dat']}"+'\n')
     f.write('mac sfsetup'+'\n')
     f.write(fr"mac {files['loadmac']} return return"+'\n')
-    outname=mname.replace('.sur','')
     f.write(fr"re fit {files['fit']}"+'\n')
     f.write(fr"re par {startvals}"+'\n')
     f.write('mac fitlogloop5'+'\n')
     f.write(fr"li par {donefile} done")
     f.close()
     
-def createmacroRUN(mname,files,startvals,donefile):
+def createmacroRUN(files,startvals,donefile):
     f=open(fr"{files['fitmac']}",'w')
     f.write(fr"re bul {files['bul']}"+'\n')
     f.write(fr"re dat  {files['dat']}"+'\n')
     f.write('mac sfsetup'+'\n')
     f.write(fr"mac {files['loadmac']} return return"+'\n')
-    outname=mname.replace('.sur','')
     f.write(fr"re fit {files['fit']}"+'\n')
     f.write(fr"re par {startvals}"+'\n')
     f.write('mac fitlogloop5run'+'\n')
     f.write(fr"li par {donefile} done")
     f.close()
 
-def ASAloop(modname,fitlist,files,fit5path,donefile,rodexe):
+def ASAloop(fitlist,files,fit5path,donefile,rodexe):
     while checkchidiff(fitlist)>0.01:
         startvals=fit5path
-        createmacroASA(modname,files,startvals)
+        createmacroASA(files,startvals,donefile)
         domacrofits(donefile,rodexe)
         asacount+=1
         print(f'asa loop {asacount}')
         fitlist,fitted,ranges,fitdf=calcfitlist(run,5)
     return fitlist[4]
 
-def runloop(modname,fitlist,files,fit5path,donefile,rodexe):
+def runloop(fitlist,files,fit5path,donefile,rodexe):
     while checkchidiff(fitlist)>0.005:
         startvals=fit5path
-        createmacroRUN(modname,files,startvals)
+        createmacroRUN(files,startvals,donefile)
         domacrofits(donefile,rodexe)
         runcount+=1
         print(f'run loop {runcount}')
