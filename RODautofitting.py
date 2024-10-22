@@ -74,7 +74,7 @@ def calcfitlist(run,n):
         if i==0:
             fitlist=fitval
         else:
-            fitlist=fitlist.append(fitval)
+            fitlist=pd.concat([fitlist,fitval])
     return fitlist,fitted,ranges,fitdf 
 
 
